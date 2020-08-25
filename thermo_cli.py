@@ -28,6 +28,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
 
     while True:
         data, addr = sock.recvfrom(1024)  # buffer size is 1024 bytes
+        print("pack_len=", len(data))
         if not verefy_checksum(data):
             print("bad checksum, dropping packet")
             continue
@@ -41,12 +42,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
             print("ids, lastconv_time", d)
 
         elif pack_type == 2:
-            fmt = "h" * ndevs + "I"
-            d = struct.unpack(fmt, data[2:-1])
-            print("t")
-            for x in d[:-1]:
+            fmt = "h" * ndevs
+            d = struct.unpack(fmt, data[2:-5])
+            for x in d:
                 print(x/128)
-            print("conv_millis=", d[-1])
+            m = struct.unpack("I", data[-5:-1])
+            print("conv_millis=", m[0])
 
         pack_count += 1
         if pack_count > 5:
