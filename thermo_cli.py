@@ -47,7 +47,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
         elif pack_type == 2:
             fmt = "h" * ndevs
             line = struct.unpack('b', data[2:3])
-            print('line=', line[0])
+            print('line = ', line[0])
             d = struct.unpack(fmt, data[3:-5])
             for x in d:
                 print(x/128)
