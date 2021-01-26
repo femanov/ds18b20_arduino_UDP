@@ -5,12 +5,13 @@ import struct
 import numpy as np
 
 HOST = '192.168.11.2'    # The remote host
-PORT = 12333              # The same port as used by the server
+PORT = 12333             # The same port as used by the server
 MESSAGE = b"hello"
 
 is_first_packet = True
 ndevs = None
 pack_count = 0
+
 
 def verefy_checksum(data_in):
     a = np.frombuffer(data_in, dtype=np.uint8)
@@ -18,7 +19,9 @@ def verefy_checksum(data_in):
     for i in range(len(a)-1):
         b[0] += a[i]
     c = np.bitwise_and(b[0], 0xFF)
-    return c == a[-1]
+    # return c == a[-1]
+    return 1
+
 
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
     print("UDP target IP: %s" % HOST)
@@ -38,12 +41,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
 
         if pack_type == 1:
             fmt = "Q" * ndevs + "I"
-            d = struct.unpack(fmt, data[2:-1])
+            d = struct.unpack(fmt, data[3:-1])
             print("ids, lastconv_time", d)
 
         elif pack_type == 2:
             fmt = "h" * ndevs
-            d = struct.unpack(fmt, data[2:-5])
+            line = struct.unpack('b', data[2:3])
+            print('line=', line[0])
+            d = struct.unpack(fmt, data[3:-5])
             for x in d:
                 print(x/128)
             m = struct.unpack("I", data[-5:-1])
