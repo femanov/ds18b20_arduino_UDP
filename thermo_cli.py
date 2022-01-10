@@ -4,7 +4,8 @@ import socket
 import struct
 import numpy as np
 
-HOST = '192.168.11.2'    # The remote host
+#HOST = '192.168.11.2'    # The remote host
+HOST = '192.168.130.231'
 PORT = 12333             # The same port as used by the server
 MESSAGE = b"hello"
 
